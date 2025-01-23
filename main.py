@@ -1,5 +1,7 @@
 from Services.supplier_service import SupplierService
-from DAL.supplier_repository import SupplierRepository
+from  Services.product_service import ProductService
+
+from DAL.product_repository import ProductRepository
 
 class Main:
     @staticmethod
@@ -15,7 +17,7 @@ class Main:
             if menu_selected == '1':
                 Main.supplier_menu()
             elif menu_selected == '2':
-                print("\nProduct management is under development.")
+                Main.product_menu()
             elif menu_selected == '0':
                 print("\nExiting the system. Goodbye!")
                 break
@@ -79,6 +81,64 @@ class Main:
                 break
             else:
                 print("\nInvalid selection. Please choose a valid option.")
+    
+    
+    
+    @staticmethod
+    def product_menu():
+        while True:
+            print("\n--- Manage Products ---")
+            print("1. Add Product")
+            print("2. View All Products")
+            print("3. Search Product by Name")
+            print("4. View All Products with their Suppliers")
+            print("5. Update Product")
+            print("0. Return to Main Menu")
+            
+            submenu_selected = input("\nChoose an option: ").strip()
+
+            if submenu_selected == '1':
+                name = input("Enter the product's name: ").strip()
+                description = input("Type the description of the product MAX(10 chrs): ").strip()
+                price = int(input("Amount for each Item: "))
+                stock_count = input("Enter stock quantity: ").strip()
+                supplier_id = input("Enter the id of the supplier: " ).strip()
+                ProductService.add_product(name, description, price, stock_count, supplier_id)
+            
+            elif submenu_selected == '2':
+                products = ProductService.get_all_products()
+                if products:
+                    print("\n--- List of Products ---")
+                    for product in products:
+                        print(f"ID: {product[0]}, Name: {product[1]}, Description: {product[2]}, Price: {product[3]}, Stock Available: {product[4]} Created On: {product[6]}")
+                else:
+                    print("\n 0")
+            
+            elif submenu_selected == '3':
+                name = input("Enter the name of the product to search: ").strip()
+                product = ProductService.search_product_by_name(name)
+                if product:
+                    print("\n--- Search Results ---")
+                    print(f"ID: {product[0]}, Name: {product[1]}, Description: {product[2]}, Price: {product[3]}, Stock Available: {product[4]} Created On: {product[6]}")
+                else:
+                    print(f"\nNo products found with the name '{name}'.")
+            
+            elif submenu_selected == '4':
+                products = ProductService.list_products_with_their_suppliers()
+                if products:
+                    print("\n--- List of Products and associated Suppliers---")
+                    for product in products:
+                        print(f"ID: {product[0]}, Name: {product[1]}, Description: {product[2]}, Price: {product[3]}, Stock Available: {product[4]} Created On: {product[5]}")
+                        print(f"Supplier\n Name: {product[6]}, Location: {product[7]}\n")
+                else:
+                    print("\n 0")
+            elif submenu_selected == '5':
+                print("Coming Soon")
+            elif submenu_selected == '0':
+                print("\nReturning to the main menu.")
+                break
+            else:
+                print("\nInvalid selection. Please choose a valid option.")
 
 if __name__ == "__main__":
     
@@ -90,8 +150,11 @@ if __name__ == "__main__":
         
         # Re-Create the tables
         SupplierRepository.create_table();
+        
+        ProductRepository.drop_table()
+        ProductRepository.create_table()
     
     """
-    
+
     
     Main.main_menu()
