@@ -34,7 +34,7 @@ class SupplierRepository:
     @staticmethod
     def find_supplier_by_name(name: str) -> list:
         """Find suppliers by their name."""
-        suppliers = CURSOR.execute("SELECT * FROM suppliers WHERE name = ?", (name,)).fetchall()
+        suppliers = CURSOR.execute("SELECT * FROM suppliers WHERE name LIKE ?", (name + '%',)).fetchall()
         if suppliers:
             return suppliers
         print(f"No suppliers found with the name: {name}")

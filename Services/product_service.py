@@ -3,19 +3,19 @@ import json
 
 class ProductService:
     @staticmethod
-    def add_supplier(
+    def add_product(
         name: str,
         description: str,
+        price: int,
         stock_count: int,
         supplier_id: int,
-        date_created,
     ) -> None:
         """
         Adds a new product to the database.
         """
         
-        supplier_id = ProductRepository.create_supplier(name, description, stock_count, date_created)
-        print(f"Product '{name}' from '{supplier_id}' added successfully")
+        supplier_id = ProductRepository.create_product(name, description,price, stock_count, supplier_id)
+        print(f"Product '{name}' has been added successfully.")
 
     @staticmethod
     def get_all_products() -> list:
@@ -38,3 +38,4 @@ class ProductService:
         List all products with their suppliers
         """
         return ProductRepository.print_all_products_with_their_suppliers()
+        

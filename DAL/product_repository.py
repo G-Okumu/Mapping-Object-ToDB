@@ -34,7 +34,6 @@ class ProductRepository:
             (name, description, price, stock_count, supplier_id),
         )
         CONN.commit()
-        print(f"Product '{name}' has been added successfully.")
         return CURSOR.lastrowid
 
     @staticmethod
@@ -47,7 +46,7 @@ class ProductRepository:
         """
         Find a product by its name.
         """
-        product = CURSOR.execute("SELECT * FROM products WHERE name = ?", (name,)).fetchone()
+        product = CURSOR.execute("SELECT * FROM products WHERE name LIKE ?", (name + '%',)).fetchone()
         if product:
             return product
         print(f"No product found with the name: {name}")
@@ -60,10 +59,12 @@ class ProductRepository:
         """
         query = """
         SELECT 
+            p.id,
             p.name AS product_name, 
             p.description, 
             p.price, 
-            p.stock_count, 
+            p.stock_count,
+            p.date_created,
             s.name AS supplier_name, 
             s.location AS supplier_location
         FROM 
@@ -81,3 +82,5 @@ class ProductRepository:
         CURSOR.execute("DROP TABLE IF EXISTS products")
         CONN.commit()
         print("Products table dropped successfully.")
+
+
